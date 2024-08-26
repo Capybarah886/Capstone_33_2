@@ -1,3 +1,5 @@
+import base64
+import json
 import cv2
 import numpy as np
 
@@ -50,12 +52,26 @@ class HandProcesser:
             print(f"Error: {e}")
             return None
 
-if __name__ == "__main__":
-    img = cv2.imread('./images/dog.png')
+def b64_to_img(b64):
+    img = base64.b64decode(b64)
+    npimg = np.fromstring(img, dtype=np.uint8)
+    return cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+
+def lambda_handler(event, context):
+    # TODO implement
+    img = event['body']
+    img_b64=b64_to_img(img)
     try:
-        hand = HandProcesser(img)
+        hand = HandProcesser(img_b64)
         result = hand.process()
         if result is not None:
-            print(f"The hand area in the image is {result} squared centimeters")
+            return {
+                'statusCode': 200,
+                 'body': json.dumps(f"The hand area in the image is {result} squared centimeters"),
+    }
     except ValueError as e:
         print(f"Initialization Error: {e}")
+        return {
+            'statusCode': 400,
+            'body': json.dumps('No data return')
+        }

@@ -60,7 +60,7 @@ class HandProcesser:
         pixel_ratio = actual_area / cv2.contourArea(target_circle)
         return cv2.contourArea(hand) * pixel_ratio
 
-    def process(self):
+    def main(self):
         try:
             hand, target_circle = self.get_contours()
             return round(self.get_size(hand, target_circle), 2)
@@ -78,7 +78,7 @@ def lambda_handler(event, context):
     img_b64=b64_to_img(img)
     try:
         hand = HandProcesser(img_b64)
-        result = hand.process()
+        result = hand.main()
         if result is not None:
             return {
                 'statusCode': 200,
@@ -91,14 +91,14 @@ def lambda_handler(event, context):
             'body': json.dumps('No data return')
         }
 if __name__ == "__main__":
-    img_path = "./images/image5.jpg"
+    img_path = ".\images\image5.jpg"
     img = cv2.imread(img_path)
 
     # Create an instance of HandProcesser
     hand = HandProcesser(img)
 
     # Call the process method
-    result = hand.process()
+    result = hand.main()
 
     # Assert that the result is not None
 

@@ -38,7 +38,7 @@ class HandProcesser:
     def get_size(self, hand, target_circle):
         if target_circle is None:
             raise ValueError("Target circle is None")
-        actual_area = 1.8*1.8 * 3.14  # radius = 1.8cm
+        actual_area = 1.6*1.6 * 3.14  # radius = 1.8cm
         pixel_ratio = actual_area / cv2.contourArea(target_circle)
         return cv2.contourArea(hand) * pixel_ratio
 
@@ -51,7 +51,7 @@ class HandProcesser:
             return None
 
 if __name__ == "__main__":
-    img = cv2.imread('./images/dog.png')
+    img = cv2.imread('./images/image3.jpg')
     try:
         hand = HandProcesser(img)
         result = hand.process()
